@@ -48,7 +48,7 @@ extension TrackerService: TrackerServiceProtocol {
     //Добавление категории
     func insertCategory(_ category: TrackerCategory) {
         queue.async(flags: .barrier) { [weak self] in
-            Task { @MainActor in
+            DispatchQueue.main.async {
                 var categories = self?.categories ?? []
                 categories.append(category)
                 self?.pushCategoriesNotification(categories)
@@ -59,7 +59,7 @@ extension TrackerService: TrackerServiceProtocol {
     //Обновление категории
     func updateCategory(_ category: TrackerCategory) {
         queue.async(flags: .barrier) { [weak self] in
-            Task { @MainActor in
+            DispatchQueue.main.async {
                 guard var categories = self?.categories, let categoryIdx = categories.firstIndex(where: { $0.title == category.title
                 }) else {
                     self?.insertCategory(category)
@@ -147,7 +147,7 @@ extension TrackerService: TrackerServiceProtocol {
     func insertTracker(_ categoryIndex: Int, tracker: Tracker) {
         queue.async(flags: .barrier) { [weak self] in
             guard let self else { return }
-            Task { @MainActor in
+            DispatchQueue.main.async {
                 var trackers = self.categories[categoryIndex].trackers
                 let categoryTitle = self.categories[categoryIndex].title
                 trackers.append(tracker)
@@ -163,12 +163,12 @@ extension TrackerService: TrackerServiceProtocol {
     func checkTracker(_ tracker: Tracker, date: Date) {
         queue.async(flags: .barrier) { [weak self] in
             guard let self else { return }
-            Task { @MainActor in
+            DispatchQueue.main.async {
                 if !self.recordExist(tracker, date: date) {
                     var records = self.trackerRecords
                     let record = TrackerRecord(trackerId: tracker.id, date: date)
                     records.append(record)
-                    pushRecordsNotification(records)
+                    self.pushRecordsNotification(records)
                 }
             }
             
@@ -179,14 +179,14 @@ extension TrackerService: TrackerServiceProtocol {
     func uncheckTracker(_ tracker: Tracker, date: Date) {
         queue.async(flags: .barrier) { [weak self] in
             guard let self else { return }
-            Task { @MainActor in
+            DispatchQueue.main.async {
                 if self.recordExist(tracker, date: date) {
                     let didUncheckedRecords = self.trackerRecords.filter { $0.trackerId == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: date)}
                     guard let record = didUncheckedRecords.first else { return }
                     var records =  self.trackerRecords
                     guard let recordIndex = self.trackerRecords.firstIndex(of: record) else { return }
                     records.remove(at: recordIndex)
-                    pushRecordsNotification(records)
+                    self.pushRecordsNotification(records)
                 }
             }
         }
@@ -228,7 +228,7 @@ private extension TrackerService {
     func setObserverCategoryInserted() {
         observerCategoryInserted = NotificationCenter.default.addObserver(forName: Self.didCategoryInsertedNotification, object: nil, queue: .main) { [weak self] notification in
             let categories = notification.object as? [TrackerCategory] ?? []
-            Task { @MainActor in
+            DispatchQueue.main.async {
                 self?.categories = categories
             }
         }
@@ -247,7 +247,7 @@ private extension TrackerService {
     func setObserverRecordInserted() {
         observerRecordInserted = NotificationCenter.default.addObserver(forName: Self.didRecordInsertedNotification, object: nil, queue: .main) { [weak self] notification in
             let records = notification.object as? [TrackerRecord] ?? []
-            Task { @MainActor in
+            DispatchQueue.main.async {
                 self?.trackerRecords = records
             }
         }
