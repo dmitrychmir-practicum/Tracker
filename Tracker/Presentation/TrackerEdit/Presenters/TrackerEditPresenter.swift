@@ -101,13 +101,16 @@ final class TrackerEditPresenter: TrackerEditPresenterProtocol {
         guard let categoryTitle = trackerModel?.category?.title, let category = trackerService?.getCategoryByTitle(categoryTitle)
                 else { return }
         
-        var proxyCategory = category
-        if !proxyCategory.trackers.contains(where: { $0.id == tracker.id }) {
-            proxyCategory.trackers.append(tracker)
-            
+        var proxyCategory: TrackerCategory
+        var trackers = category.trackers
+        if !trackers.contains(where: { $0.id == tracker.id }) {
+            trackers.append(tracker)
+            proxyCategory = TrackerCategory(title: category.title, trackers: trackers)
         } else {
-            guard let idx = category.trackers.firstIndex(of: tracker) else { return }
-            proxyCategory.trackers[idx] = tracker
+            //Обновление существующего трекера на случай редактирования
+            guard let idx = trackers.firstIndex(of: tracker) else { return }
+            trackers[idx] = tracker
+            proxyCategory = TrackerCategory(title: category.title, trackers: trackers)
         }
         
         trackerService?.updateCategory(proxyCategory)

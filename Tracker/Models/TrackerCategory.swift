@@ -7,7 +7,7 @@
 
 struct TrackerCategory: Hashable, Equatable {
     let title: String
-    var trackers: [Tracker]
+    let trackers: [Tracker]
 
     static func == (lhs: TrackerCategory, rhs: TrackerCategory) -> Bool {
         lhs.title == rhs.title
