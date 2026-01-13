@@ -8,11 +8,15 @@
 import UIKit
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    private let trackerService = TrackerService.shared
+    
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
+        //Загружаем данные трекеров на текущую дату
+        trackerService.loadData(date: Date())
+        
         window = UIWindow(windowScene: scene)
         window?.rootViewController = TabBarController()
         window?.makeKeyAndVisible()

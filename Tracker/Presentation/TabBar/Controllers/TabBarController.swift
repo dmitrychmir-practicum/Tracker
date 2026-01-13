@@ -12,10 +12,13 @@ final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let trackerListController = TrackerNavBarController()
-        trackerListController.tabBarItem = TabBarItem.trackerList.item
-        let statisticsController = StatisticsViewController()
-        statisticsController.tabBarItem = TabBarItem.statistics.item
+        guard let trackerListController = TabBarItem.trackerList.controller as? TrackerListViewController,
+              let statisticsController = TabBarItem.statistics.controller as? StatisticsViewController else {
+            fatalError("Не удалось создать контроллеры")
+        }
+
+        trackerListController.configure(TrackerListPresenter())
+        
         viewControllers = [trackerListController, statisticsController]
         self.selectedIndex = 0
     }
