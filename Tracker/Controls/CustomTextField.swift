@@ -13,6 +13,7 @@ final class CustomTextField: UIView {
     private let presenter: TrackerEditPresenterProtocol?
     private var isShowWarning: Bool = false
     
+    
     init(presenter: TrackerEditPresenterProtocol?) {
         self.presenter = presenter
         
@@ -21,8 +22,9 @@ final class CustomTextField: UIView {
         setupView()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
 }
 
@@ -112,10 +114,10 @@ extension CustomTextField: UITextFieldDelegate {
         
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
         handleCharacterLimit(for: updatedText)
-        return updatedText.count <= 38
+        return updatedText.count <= Constants.maxNameSymbols
     }
     
     private func handleCharacterLimit(for updatedText: String) {
-        toggleWarningMessage(updatedText.count > 38)
+        toggleWarningMessage(updatedText.count > Constants.maxNameSymbols)
     }
 }

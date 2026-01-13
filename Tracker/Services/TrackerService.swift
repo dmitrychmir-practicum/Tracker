@@ -194,10 +194,13 @@ extension TrackerService: TrackerServiceProtocol {
     
     //Переключение состояния выполнения
     func toggleCheckTracker(_ tracker: Tracker, date: Date) {
-        if recordExist(tracker, date: date) {
-            uncheckTracker(tracker, date: date)
-        } else {
-            checkTracker(tracker, date: date)
+        if Calendar.current.isDate(date, inSameDayAs: Date.now) {
+            if recordExist(tracker, date: date) {
+                uncheckTracker(tracker, date: date)
+            } else {
+                
+                checkTracker(tracker, date: date)
+            }
         }
     }
     

@@ -13,7 +13,7 @@ enum NavigationBarButtons {
     
     var button: UIButton {
         if self != .add {
-            fatalError("Выбран не верный case")
+            assertionFailure("Выбран не верный case")
         }
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +33,7 @@ enum NavigationBarButtons {
     
     var picker: UIDatePicker {
         if self != .date {
-            fatalError("Выбран не верный case")
+            assertionFailure("Выбран не верный case")
         }
         let datePicker = UIDatePicker()
         datePicker.translatesAutoresizingMaskIntoConstraints = false

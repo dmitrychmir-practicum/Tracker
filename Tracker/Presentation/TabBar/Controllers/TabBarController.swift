@@ -14,7 +14,8 @@ final class TabBarController: UITabBarController {
         
         guard let trackerListController = TabBarItem.trackerList.controller as? TrackerListViewController,
               let statisticsController = TabBarItem.statistics.controller as? StatisticsViewController else {
-            fatalError("Не удалось создать контроллеры")
+            assertionFailure("Не удалось создать контроллеры")
+            return
         }
 
         trackerListController.configure(TrackerListPresenter())

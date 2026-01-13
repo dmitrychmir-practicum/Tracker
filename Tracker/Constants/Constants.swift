@@ -31,7 +31,7 @@ enum Constants {
     static let checkButtonTrackerCellPlus: UIImage = makeImage(named: "plus")
     static let checkButtonTrackerCellCheckmark: UIImage = makeImage(named: "checkmark")
     
-    // MARK: - Reusible Identifiers
+    // MARK: - Reuseble Identifiers
     static let buttonCellReuseIdentifier = "button.cell.identifier"
     static let scheduleCellReuseIdentifier = "schedule.cell.identifier"
     static let trackerListCellReuseIdentifier = "tracker.list.cell.identifier"
@@ -46,6 +46,10 @@ enum Constants {
         static let cellHeight: Int = 148
         static let heightCategory: CGFloat = 54
     }
+    
+    // MARK: - Magic
+    
+    static let maxNameSymbols = 38
     
     // MARK: - Private utils
     private static func makeImage(named: String) -> UIImage {

@@ -8,6 +8,7 @@
 import UIKit
 
 final class TrackerListPresenter: TrackerListPresenterProtocol {
+    
     var view: TrackerListViewProtocol?
     
     private var trackerService: TrackerServiceProtocol?

@@ -23,8 +23,9 @@ final class TrackerCell: UICollectionViewCell {
         super.init(frame: frame)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
     func configureCell(tracker: Tracker, daysTotal count: Int, isCheckToDay: Bool, action: UIAction)

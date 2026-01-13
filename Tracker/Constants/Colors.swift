@@ -28,6 +28,6 @@ enum Colors: Int, CaseIterable, Codable {
     case salad = 0x2FD058 // Салатовый
 
     var uiColor: UIColor {
-        return UIColor(rgb: self.rawValue, alpha: 1)
+        UIColor(rgb: rawValue, alpha: 1)
     }
 }
