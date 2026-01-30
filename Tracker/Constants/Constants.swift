@@ -17,6 +17,8 @@ enum Constants {
     static let trackerTypeButtonTitleNotRegular: String = "Нерегулярное событие"
     static let buttonSelectCategory: String = "Категория"
     static let buttonSelectSchedule: String = "Расписание"
+    static let colorCollectionTitle: String = "Цвет"
+    static let emojisCollectionTitle: String = "Emoji"
     static let buttonCreate: String = "Создать"
     static let buttonCancel: String = "Отменить"
     static let buttonOk: String = "Готово"
@@ -31,11 +33,18 @@ enum Constants {
     static let checkButtonTrackerCellPlus: UIImage = makeImage(named: "plus")
     static let checkButtonTrackerCellCheckmark: UIImage = makeImage(named: "checkmark")
     
-    // MARK: - Reuseble Identifiers
+    // MARK: - Reusable Identifiers
     static let buttonCellReuseIdentifier = "button.cell.identifier"
     static let scheduleCellReuseIdentifier = "schedule.cell.identifier"
     static let trackerListCellReuseIdentifier = "tracker.list.cell.identifier"
-    static let trackerListHeaderReuseIdentifier = "tracker.list.header.identifier"
+    static let headerReuseIdentifier = "header.identifier"
+    static let trackerEditHeaderReuseIdentifier = "tracker.edit.header.identifier"
+    static let colorCellReuseIdentifier: String = "color.cell.identifier"
+    static let emojiCellReuseIdentifier: String = "emoji.cell.identifier"
+    
+    static let didCategoryInsertedNotification = Notification.Name("didCategoryInsertedNotification")
+    static let didRecordInsertedNotification = Notification.Name("didRecordInsertedNotification")
+    static let didRecordStoreChanged = Notification.Name("didRecordStoreChanged")
     
     // MARK: - Constants for collection view
     enum CollectionView {
@@ -47,6 +56,16 @@ enum Constants {
         static let heightCategory: CGFloat = 54
     }
     
+    enum TrackerEditCollections {
+        static let cellCount: Int = 6
+        static let leftInset: CGFloat = 18
+        static let rightInset: CGFloat = 19
+        static let cellSpacing: CGFloat = 5
+        static let cellHeight: Int = 52
+        static let cellWidth: Int = 52
+        static let heightHeader: CGFloat = 18
+    }
+    
     // MARK: - Magic
     
     static let maxNameSymbols = 38
@@ -56,6 +75,7 @@ enum Constants {
         guard let image = UIImage(systemName: named) else {
             return UIImage()
         }
+            
         return image
     }
 }

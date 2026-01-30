@@ -15,6 +15,8 @@ final class TrackerEditViewController: UIViewController, TrackerEditViewProtocol
     private(set) var table: UITableView
     private(set) var nameField: CustomTextField
     private(set) var scrollView = UIScrollView()
+    private var colorCollection: ColorCollectionView
+    private var emojiCollection: EmojiCollectionView
     private var titleLabel: UILabel!
     private let cancelButton = TrackerEditButtons.cancel.button
     private let createButton = TrackerEditButtons.create.button
@@ -24,8 +26,11 @@ final class TrackerEditViewController: UIViewController, TrackerEditViewProtocol
     init(trackerType: TrackerType, presenter: TrackerEditPresenterProtocol) {
         self.trackerType = trackerType
         self.presenter = presenter
-        self.table = Tables.buttons.makeButtonsTable(self.trackerType)
-        self.nameField = CustomTextField(presenter: self.presenter)
+        table = Tables.buttons.makeButtonsTable(self.trackerType)
+        nameField = CustomTextField(presenter: self.presenter)
+        colorCollection = ColorCollectionView(presenter: self.presenter)
+        emojiCollection = EmojiCollectionView(presenter: self.presenter)
+        
         super.init(nibName: nil, bundle: nil)
         self.presenter?.view = self
     }
@@ -66,6 +71,8 @@ private extension TrackerEditViewController {
         setupScrollView()
         setupNameField()
         setupButtonsTable()
+        setupEmojisCollection()
+        setupColorCollection()
         setupGestureRecognizers()
     }
     
@@ -115,7 +122,7 @@ private extension TrackerEditViewController {
             scrollView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: createButton.topAnchor)
+            scrollView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -10)
         ])
     }
     
@@ -146,6 +153,27 @@ private extension TrackerEditViewController {
         ])
     }
     
+    func setupEmojisCollection() {
+        scrollView.addSubview(emojiCollection)
+        
+        NSLayoutConstraint.activate([
+            emojiCollection.topAnchor.constraint(equalTo: table.bottomAnchor, constant: 32),
+            emojiCollection.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            emojiCollection.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
+        ])
+    }
+    
+    func setupColorCollection() {
+        scrollView.addSubview(colorCollection)
+        
+        NSLayoutConstraint.activate([
+            colorCollection.topAnchor.constraint(equalTo: emojiCollection.bottomAnchor, constant: 32),
+            colorCollection.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            colorCollection.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: colorCollection.bottomAnchor)
+        ])
+    }
+
     func setupGestureRecognizers() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGestureRecognizer.cancelsTouchesInView = false

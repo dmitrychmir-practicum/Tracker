@@ -30,4 +30,12 @@ enum Colors: Int, CaseIterable, Codable {
     var uiColor: UIColor {
         UIColor(rgb: rawValue, alpha: 1)
     }
+    
+    static func getEnum(hexStr: String) -> Colors {
+        var hex = hexStr.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "#", with: "")
+        var rgbValue:UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&rgbValue)
+        
+        return Colors(rawValue: Int(rgbValue)) ?? .red
+    }
 }

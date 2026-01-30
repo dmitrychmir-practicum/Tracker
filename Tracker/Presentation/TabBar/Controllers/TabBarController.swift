@@ -18,7 +18,7 @@ final class TabBarController: UITabBarController {
             return
         }
 
-        trackerListController.configure(TrackerListPresenter())
+        trackerListController.configure(TrackerListPresenter(trackerService: TrackerCoreDataService.shared))
         
         viewControllers = [trackerListController, statisticsController]
         self.selectedIndex = 0

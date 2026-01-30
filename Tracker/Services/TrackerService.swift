@@ -8,9 +8,7 @@
 import Foundation
 
 final class TrackerService {
-    static let shared = TrackerService()
-    static let didCategoryInsertedNotification = Notification.Name("TrackerService.didCategoryInsertedNotification")
-    static let didRecordInsertedNotification = Notification.Name("TrackerService.didRecordInsertedNotification")
+    static let shared: TrackerServiceProtocol = TrackerService()
     
     private var categories: [TrackerCategory] = []
     private var trackerRecords: [TrackerRecord] = []
@@ -37,7 +35,7 @@ extension TrackerService: TrackerServiceProtocol {
     
     // MARK: - Loader
     
-    func loadData(date: Date) {
+    func loadData() {
         //TODO: Реализовать загрузку данных из базы
         //      Заготовка на следующий спринт
         categories.append(TrackerCategory(title: Constants.defaultTrackerCategoryTitle, trackers: []))
@@ -198,7 +196,6 @@ extension TrackerService: TrackerServiceProtocol {
             if recordExist(tracker, date: date) {
                 uncheckTracker(tracker, date: date)
             } else {
-                
                 checkTracker(tracker, date: date)
             }
         }
@@ -226,7 +223,7 @@ extension TrackerService: TrackerServiceProtocol {
 // MARK: - Observers
 private extension TrackerService {
     func setObserverCategoryInserted() {
-        observerCategoryInserted = NotificationCenter.default.addObserver(forName: Self.didCategoryInsertedNotification, object: nil, queue: .main) { [weak self] notification in
+        observerCategoryInserted = NotificationCenter.default.addObserver(forName: Constants.didCategoryInsertedNotification, object: nil, queue: .main) { [weak self] notification in
             let categories = notification.object as? [TrackerCategory] ?? []
             DispatchQueue.main.async {
                 self?.categories = categories
@@ -235,7 +232,7 @@ private extension TrackerService {
     }
     
     func pushCategoriesNotification(_ categories: [TrackerCategory]) {
-        NotificationCenter.default.post(name: Self.didCategoryInsertedNotification, object: categories)
+        NotificationCenter.default.post(name: Constants.didCategoryInsertedNotification, object: categories)
     }
     
     func unsetObserverCategoryInserted() {
@@ -245,7 +242,7 @@ private extension TrackerService {
     }
     
     func setObserverRecordInserted() {
-        observerRecordInserted = NotificationCenter.default.addObserver(forName: Self.didRecordInsertedNotification, object: nil, queue: .main) { [weak self] notification in
+        observerRecordInserted = NotificationCenter.default.addObserver(forName: Constants.didRecordInsertedNotification, object: nil, queue: .main) { [weak self] notification in
             let records = notification.object as? [TrackerRecord] ?? []
             DispatchQueue.main.async {
                 self?.trackerRecords = records
@@ -254,7 +251,7 @@ private extension TrackerService {
     }
     
     func pushRecordsNotification(_ records: [TrackerRecord]) {
-        NotificationCenter.default.post(name: Self.didRecordInsertedNotification, object: records)
+        NotificationCenter.default.post(name: Constants.didRecordInsertedNotification, object: records)
     }
     
     

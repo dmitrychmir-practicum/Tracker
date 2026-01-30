@@ -12,7 +12,19 @@ extension Date {
         DateFormatter.defaultDateTime.string(from: self)
     }
     var datePickerString: String {
-        DateFormatter.datePickerFormater.string(from: self)
+        DateFormatter.datePickerFormatter.string(from: self)
+    }
+    
+    func localDate() -> Date {
+            let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: self))
+            guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: self) else {return self}
+        
+            return localDate
+        }
+    
+    var onlyDate: Date {
+        let proxy = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        return Calendar.current.date(from: proxy)?.localDate() ?? Date()
     }
 }
 
@@ -26,7 +38,7 @@ private extension DateFormatter {
         return formatter
     } ()
     
-    static let datePickerFormater: DateFormatter = {
+    static let datePickerFormatter: DateFormatter = {
         formatter.dateFormat = "dd.MM.yy"
         return formatter
     } ()

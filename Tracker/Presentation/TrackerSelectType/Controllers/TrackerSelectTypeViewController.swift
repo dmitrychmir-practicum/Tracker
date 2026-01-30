@@ -55,7 +55,7 @@ private extension TrackerSelectTypeViewController {
 // MARK: - Actions
 private extension TrackerSelectTypeViewController {
     func createNewTracker(_ trackerType: TrackerType) {
-        let controller = TrackerEditViewController(trackerType: trackerType, presenter: TrackerEditPresenter())
+        let controller = TrackerEditViewController(trackerType: trackerType, presenter: TrackerEditPresenter(trackerService: TrackerCoreDataService.shared))
         controller.modalPresentationStyle = .pageSheet
         present(controller, animated: true)
     }

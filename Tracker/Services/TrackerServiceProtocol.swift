@@ -8,7 +8,7 @@
 import Foundation
 
 protocol TrackerServiceProtocol {
-    func loadData(date: Date)
+    func loadData()
     
     func insertCategory(_ category: TrackerCategory)
     func updateCategory(_ category: TrackerCategory)

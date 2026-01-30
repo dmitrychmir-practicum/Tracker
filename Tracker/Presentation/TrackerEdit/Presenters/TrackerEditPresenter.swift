@@ -98,8 +98,9 @@ final class TrackerEditPresenter: TrackerEditPresenterProtocol {
     }
     
     func saveTracker(tracker: Tracker) {
-        guard let categoryTitle = trackerModel?.category?.title, let category = trackerService?.getCategoryByTitle(categoryTitle)
-                else { return }
+        guard let categoryTitle = trackerModel?.category?.title else { return }
+        
+        let category = trackerService?.getCategoryByTitle(categoryTitle) ?? TrackerCategory(title: categoryTitle, trackers: [])
         
         var proxyCategory: TrackerCategory
         var trackers = category.trackers

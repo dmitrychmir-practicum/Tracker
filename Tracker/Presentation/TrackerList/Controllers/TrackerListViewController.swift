@@ -130,6 +130,18 @@ extension TrackerListViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGFloat {
         return Constants.CollectionView.cellSpacing
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let tracker = self.presenter?.categories[indexPath.section].trackers[indexPath.row] else { return }
+        
+        self.presenter?.pressCheckButton(tracker: tracker)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let tracker = self.presenter?.categories[indexPath.section].trackers[indexPath.row] else { return }
+        
+        self.presenter?.pressCheckButton(tracker: tracker)
+    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -151,23 +163,21 @@ extension TrackerListViewController: UICollectionViewDataSource {
             fatalError("Не удалось создать ячейку")
         }
         
-        guard let tracker = self.presenter?.categories[indexPath.section].trackers[indexPath.row] else { return cell }
-        let totalCountDays = presenter?.getTotalFinishedCountByTracker(tracker) ?? 0
-        let isCheckToDay = presenter?.trackerRecords.contains(where: {$0.trackerId == tracker.id}) ?? false
-        cell.configureCell(tracker: tracker, daysTotal: totalCountDays, isCheckToDay: isCheckToDay, action: UIAction(handler: {_ in
-            self.presenter?.pressCheckButton(tracker: tracker)
-        }))
-        
+        guard let tracker = self.presenter?.categories[indexPath.section].trackers[indexPath.row], let presenter else { return cell }
+        let totalCountDays = presenter.getTotalFinishedCountByTracker(tracker)
+        let isCheckToDay = presenter.trackerRecords.contains(where: {$0.trackerId == tracker.id})
+        cell.configureCell(tracker: tracker, daysTotal: totalCountDays, isCheckToDay: isCheckToDay)
+        cell.isSelected = isCheckToDay
         return cell
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
-            withReuseIdentifier: Constants.trackerListHeaderReuseIdentifier,
+            withReuseIdentifier: Constants.headerReuseIdentifier,
             for: indexPath
-        ) as? CategoryHeaderCell else {
-            fatalError("Не удалось переиспользовать CategoryHeaderCell")
+        ) as? HeaderCell else {
+            fatalError("Не удалось переиспользовать HeaderCell")
         }
         header.configureCell(title: self.presenter?.categories[indexPath.section].title ?? "")
         return header

@@ -32,7 +32,7 @@ private extension TrackerCollectionView {
         self.backgroundColor = .Colors.backgroundView
         self.translatesAutoresizingMaskIntoConstraints = false
         self.register(TrackerCell.self, forCellWithReuseIdentifier: Constants.trackerListCellReuseIdentifier)
-        self.register(CategoryHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.trackerListHeaderReuseIdentifier)
+        self.register(HeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.headerReuseIdentifier)
     }
     
 }

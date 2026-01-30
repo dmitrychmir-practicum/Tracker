@@ -53,7 +53,6 @@ private extension CustomTextField {
         self.addSubview(nameTextField)
         
         NSLayoutConstraint.activate([
-            //self.heightAnchor.constraint(equalToConstant: 75),
             nameTextField.heightAnchor.constraint(equalToConstant: 75),
             nameTextField.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             nameTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor),

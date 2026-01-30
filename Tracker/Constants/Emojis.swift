@@ -24,4 +24,8 @@ enum Emojis: String, CaseIterable, Codable {
     case guitar = "🎸"
     case desertIsland = "🏝"
     case sleepyFace = "😪"
+    
+    static func getEnum(fromString: String) -> Emojis {
+        Emojis.allCases.first(where: { $0.rawValue == fromString }) ?? .smilingFace
+    }
 }

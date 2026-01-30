@@ -34,6 +34,8 @@ final class TrackerListPresenter: TrackerListPresenterProtocol {
     
     func viewDidLoad() {
         self.datePicker = view?.topNavigationBar.datePicker
+        loadCategoriesByDate(date: self.datePicker?.date ?? Date())
+        loadRecordsByDate(date: self.datePicker?.date ?? Date())
     }
     
     func configure() {
@@ -72,7 +74,6 @@ final class TrackerListPresenter: TrackerListPresenterProtocol {
     
     func pressCheckButton(tracker: Tracker) {
         trackerService?.toggleCheckTracker(tracker, date: datePicker?.date ?? Date.now)
-        //updateCollectionView()
     }
     
     func getTotalFinishedCountByTracker(_ tracker: Tracker) -> Int {
@@ -85,17 +86,19 @@ private extension TrackerListPresenter {
     // Подписываемся на изминение списка категорий
     func setObserverCategoryInserted() {
         observerCategoryInserted = NotificationCenter.default.addObserver(
-            forName: TrackerService.didCategoryInsertedNotification, object: nil, queue: .main) { [weak self] _ in
+            forName: Constants.didCategoryInsertedNotification, object: nil, queue: .main) { [weak self] _ in
             DispatchQueue.main.async {
-                guard let self,
-                      let trackerService = self.trackerService,
-                      let date = self.datePicker?.date
-                else { return }
-                // получаем обновлённый список для выбранной даты
-                self.categories = trackerService.getCategoriesByDate(date)
-                self.updateCollectionView()
+                guard let date = self?.datePicker?.date else { return }
+                self?.loadCategoriesByDate(date: date)
             }
         }
+    }
+    
+    func loadCategoriesByDate(date: Date) {
+        guard let trackerService = self.trackerService else { return }
+        // получаем обновлённый список для выбранной даты
+        self.categories = trackerService.getCategoriesByDate(date)
+        self.updateCollectionView()
     }
     
     func unsetObserverCategoryInserted() {
@@ -106,16 +109,19 @@ private extension TrackerListPresenter {
     
     func setObserverRecordInserted() {
         observerRecordInserted = NotificationCenter.default.addObserver(
-            forName: TrackerService.didRecordInsertedNotification, object: nil, queue: .main) { [weak self] _ in
+            forName: Constants.didRecordInsertedNotification, object: nil, queue: .main) { [weak self] _ in
             DispatchQueue.main.async {
-                guard let self,
-                        let trackerService = self.trackerService,
-                        let date = self.datePicker?.date else { return }
-                    
-                self.trackerRecords = trackerService.getRecordsByDate(date: date)
-                self.updateCollectionView()
+                guard let date = self?.datePicker?.date else { return }
+                self?.loadRecordsByDate(date: date)
             }
         }
+    }
+    
+    func loadRecordsByDate(date: Date) {
+        guard let trackerService = self.trackerService else { return }
+            
+        self.trackerRecords = trackerService.getRecordsByDate(date: date)
+        self.updateCollectionView()
     }
     
     func unsetObserverRecordInserted() {

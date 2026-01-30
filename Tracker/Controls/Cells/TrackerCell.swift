@@ -13,29 +13,54 @@ final class TrackerCell: UICollectionViewCell {
     private let cardEmoji = UILabel()
     private let cardTitle = UILabel()
     private let daysTotalLabel = UILabel()
-    private let checkButton = UIButton()
+    private let statusView = UIView()
+    private let statusImageView = UIImageView()
     private var tracker: Tracker?
     private var daysCount: Int = 0
     private var isCheckToDay: Bool = false
-    private var action: UIAction?
+    private var statusImageHeightConstraint: NSLayoutConstraint!
+    private var statusImageWidthConstraint: NSLayoutConstraint!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        setupCell()
     }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         nil
     }
-    
-    func configureCell(tracker: Tracker, daysTotal count: Int, isCheckToDay: Bool, action: UIAction)
+
+    func configureCell(tracker: Tracker, daysTotal count: Int, isCheckToDay: Bool)
     {
-        self.tracker = tracker
-        self.daysCount = count
-        self.isCheckToDay = isCheckToDay
-        self.action = action
+        cardEmoji.text = tracker.emoji.rawValue
+        cardTitle.text = tracker.name
+        cardTitle.sizeToFit()
+        daysTotalLabel.text = "\(count) \(count.dayString())"
+        card.backgroundColor = tracker.color.uiColor
         
-        setupCell()
+        if isCheckToDay {
+            statusImageView.image = Constants.checkButtonTrackerCellCheckmark
+            statusView.layer.opacity = 0.3
+            
+            statusImageWidthConstraint = statusImageView.widthAnchor.constraint(equalToConstant: 12)
+            statusImageHeightConstraint = statusImageView.heightAnchor.constraint(equalToConstant: 12)
+        } else {
+            statusImageView.image = Constants.checkButtonTrackerCellPlus
+            statusView.layer.opacity = 1
+            
+            statusImageWidthConstraint = statusImageView.widthAnchor.constraint(equalToConstant: 10.62)
+            statusImageHeightConstraint = statusImageView.heightAnchor.constraint(equalToConstant: 10.21)
+        }
+        
+//        if isCheckToDay {
+//            
+//        } else {
+//            
+//        }
+        
+        statusImageView.contentMode = .scaleAspectFill
     }
 }
 
@@ -53,7 +78,7 @@ private extension TrackerCell {
         setupCardEmoji()
         setupCardTitle()
         setupDaysTotalLabel()
-        setupCheckButton()
+        setupStatusView()
     }
     
     func setupContainer() {
@@ -74,7 +99,6 @@ private extension TrackerCell {
         card.layer.cornerRadius = 16
         card.layer.borderWidth = 1
         card.layer.borderColor = UIColor.Colors.trackerCellBorder.cgColor
-        card.backgroundColor = tracker?.color.uiColor
         container.addSubview(card)
         
         NSLayoutConstraint.activate([
@@ -87,7 +111,6 @@ private extension TrackerCell {
     
     func setupCardEmoji() {
         cardEmoji.translatesAutoresizingMaskIntoConstraints = false
-        cardEmoji.text = tracker?.emoji.rawValue
         cardEmoji.backgroundColor = .Colors.emojiBackground
         cardEmoji.layer.cornerRadius = 12
         cardEmoji.layer.masksToBounds = true
@@ -108,11 +131,10 @@ private extension TrackerCell {
         stack.axis = .horizontal
         stack.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(stack)
-        
-        cardTitle.translatesAutoresizingMaskIntoConstraints = false
-        cardTitle.text = tracker?.name
+
         cardTitle.numberOfLines = 3
         cardTitle.lineBreakMode = .byWordWrapping
+        cardTitle.translatesAutoresizingMaskIntoConstraints = false
         cardTitle.textColor = .white
         cardTitle.font = .systemFont(ofSize: 12, weight: .medium)
         stack.addSubview(cardTitle)
@@ -144,29 +166,40 @@ private extension TrackerCell {
         ])
     }
     
-    func setupCheckButton() {
-        checkButton.translatesAutoresizingMaskIntoConstraints = false
-        checkButton.layer.cornerRadius = 16
-        checkButton.backgroundColor = .Colors.checkButtonBackground
-        checkButton.layer.opacity = isCheckToDay ? 0.3 : 1
-        checkButton.tintColor = .Colors.buttonDefaultText
+    func setupStatusView() {
+        statusView.translatesAutoresizingMaskIntoConstraints = false
+        statusView.layer.cornerRadius = 16
+        statusView.backgroundColor = .Colors.checkButtonBackground
+        statusView.tintColor = .Colors.buttonDefaultText
+        statusImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        statusView.addSubview(statusImageView)
+        
+        container.addSubview(statusView)
+        
         if isCheckToDay {
-            checkButton.setImage(Constants.checkButtonTrackerCellCheckmark, for: .normal)
+            statusImageWidthConstraint = statusImageView.widthAnchor.constraint(equalToConstant: 12)
+            statusImageHeightConstraint = statusImageView.heightAnchor.constraint(equalToConstant: 12)
         } else {
-            checkButton.setImage(Constants.checkButtonTrackerCellPlus, for: .normal)
+            statusImageWidthConstraint = statusImageView.widthAnchor.constraint(equalToConstant: 10.62)
+            statusImageHeightConstraint = statusImageView.heightAnchor.constraint(equalToConstant: 10.21)
         }
-        container.addSubview(checkButton)
+        
+        statusImageWidthConstraint.isActive = true
+        statusImageHeightConstraint.isActive = true
+        
         
         NSLayoutConstraint.activate([
-            checkButton.heightAnchor.constraint(equalToConstant: 34),
-            checkButton.widthAnchor.constraint(equalToConstant: 34),
-            checkButton.topAnchor.constraint(equalTo: card.bottomAnchor, constant: 8),
-            checkButton.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -12),
-        ])
-        
-        guard let action else { return }
+            statusView.heightAnchor.constraint(equalToConstant: 34),
+            statusView.widthAnchor.constraint(equalToConstant: 34),
+            statusView.topAnchor.constraint(equalTo: card.bottomAnchor, constant: 8),
+            statusView.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -12),
             
-        checkButton.addAction(action, for: .touchUpInside)
+//            statusImageView.heightAnchor.constraint(equalToConstant: isCheckToDay ? 12 : 10.62),
+//            statusImageView.widthAnchor.constraint(equalToConstant: isCheckToDay ? 12 : 10.21),
+            statusImageView.centerYAnchor.constraint(equalTo: statusView.centerYAnchor),
+            statusImageView.centerXAnchor.constraint(equalTo: statusView.centerXAnchor)
+        ])
     }
 }
 
